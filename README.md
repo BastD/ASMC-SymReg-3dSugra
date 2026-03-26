@@ -54,7 +54,10 @@ where the main ASMC algorithm is implemented.
 
 **Gradient Descent and local analysis**
 
-The gradient descent and local analysis can be found in the Gradient_descent_and_local_analysis.ipynb notebook. 
+The gradient descent and local analysis can be found in the 
+```
+Gradient_descent_and_local_analysis.ipynb notebook. 
+```
 
 ## Citation
 ```python
@@ -70,5 +73,5 @@ The gradient descent and local analysis can be found in the Gradient_descent_and
 ```
 
 ## Contact
-If you have any questions, please contact bastien.duboeuf@aei.mpg.de
+If you have any questions, please contact bastien.duboeuf@aei.mpg.de or camille.eloy@ens-lyon.fr 
 
