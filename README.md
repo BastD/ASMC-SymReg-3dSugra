@@ -23,16 +23,12 @@ or directly download the zip file.
 
 Requirements
 
-```matplotlib==3.6.2
-numpy==1.24.4
-scikit_learn==1.1.3
-setuptools==65.5.0
-sympy==1.11.1
-torch==2.2.2
-tqdm==4.66.2
-pandas==2.0.1
-seaborn
-pyyaml
+```
+tensorflow==2.16.1
+numpy<2
+sklearn==1.8
+matplotlib==3.10
+tqdm==4.67.3
 ```
 
 After activating the virtual environment, you can install specific package requirements as follows:
@@ -44,7 +40,17 @@ pip install -r requirements.txt
 
 **Main algorithm**
 
-The main ASMC for polynomial Symbolic regression is available on the run_ASMC.ipynb notebook. It uses the polynomial_sampler.py where the main ASMC algorithm is implemented. 
+The main ASMC for polynomial Symbolic regression is available on the 
+
+```python
+run_ASMC.ipynb
+``` 
+
+notebook. It uses the 
+```python
+polynomial_sampler.py
+```
+where the main ASMC algorithm is implemented. 
 
 **Gradient Descent and local analysis**
 
