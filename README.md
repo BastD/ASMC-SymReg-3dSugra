@@ -30,10 +30,11 @@ and packages
 
 ```
 tensorflow==2.16.1
-numpy<2
+numpy==1.26.4
 scikit-learn==1.8
 matplotlib==3.10
 tqdm==4.67.3
+numba==0.58.1
 ```
 
 After activating the virtual environment, you can install specific package requirements as follows:
