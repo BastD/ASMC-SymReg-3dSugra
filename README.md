@@ -2,13 +2,13 @@
 
 This is the github repo for the paper ["Machine Learning the Conformal Manifold of Holographic CFT2s"](https://arxiv.org/abs/2511.02981).
 
-The repository contains a module `polynomial_sampler.py` where the method is implemented.
+The repository contains a package `ASMC` where the method is implemented.
 This algorithm performs Annealed Importance Sampling with Sequential Monte Carlo to discover polynomial relations in data, such that $P(x_{\text{data}}) = 0$.
 
-The module is supplemented by two jupyter notebooks:
+The package is supplemented by two jupyter notebooks:
 
 1. ASMC_tutorial.ipynb: Provides a minimal working example of the algorithm.
-2. Gradient_descent_and_local_analysis.ipynb: Applies the method to the data generated via gradient descent (already available from `Points_5d.npy`) on the Supergravity potential described in the [manuscript](https://arxiv.org/abs/2511.02981). It also performs part of the analysis to extract local features. 
+2. supergravity_analysis.ipynb: Applies the method to the data generated via gradient descent (already available from `Points_5d.npy`) on the Supergravity potential described in the [manuscript](https://arxiv.org/abs/2511.02981). It also performs part of the analysis to extract local features. 
 
 ## Installation
 
