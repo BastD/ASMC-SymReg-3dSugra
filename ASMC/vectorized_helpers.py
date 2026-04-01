@@ -1,8 +1,3 @@
-"""
-Fonctions helper 100% vectorisées pour éliminer les boucles for.
-Ces fonctions sont conçues pour être compatibles JAX plus tard.
-"""
-
 import numpy as np
 from typing import Tuple
 
@@ -440,4 +435,4 @@ if __name__ == "__main__":
         if success_mult[i]:
             print(f"  Particule {i}: {old_nz} → {new_nz} ✓")
 
-    print("\n✅ Tests terminés!")
+    print("\n Tests terminés!")
