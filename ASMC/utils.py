@@ -1,15 +1,11 @@
-import itertools
-import sympy as sp
-from tqdm import tqdm
 import numpy as np 
 from matplotlib.colors import LogNorm
 import matplotlib.pyplot as plt
-from sklearn.decomposition import PCA
 
-import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.neighbors import NearestNeighbors
 from joblib import Parallel, delayed
+
 from tqdm import tqdm
 
 
