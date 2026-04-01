@@ -2,17 +2,17 @@
 
 This is the github repo for the paper ["Machine Learning the Conformal Manifold of Holographic CFT2s"](https://arxiv.org/abs/2511.02981).
 
-The main part of the method implements an Annealed Importance Sampling with Sequential Monte Carlo algorithm to discover polynomial relation among data, such that P(x_data) = 0. 
+The repository contains a module `polynomial_sampler.py` where the method is implemented.
+This algorithm performs Annealed Importance Sampling with Sequential Monte Carlo to discover polynomial relations in data, such that $P(x_{\text{data}}) = 0$.
 
-It is supplemented with a gradient descent applied on a Supergravity potential to populate the underlying algebraic variety, and a local analysis to extract local features. 
+The module is supplemented by two jupyter notebooks:
+
+1. ASMC_tutorial.ipynb: Provides a minimal working example of the algorithm.
+2. Gradient_descent_and_local_analysis.ipynb: Applies the method to the data generated via gradient descent (already available from `Points_5d.npy`) on the Supergravity potential described in the [manuscript](https://arxiv.org/abs/2511.02981). It also performs part of the analysis to extract local features. 
 
 ## Installation
 
 **Pre-requisites:**
-
-```
-Python
-```
 
 One can clone the repository via 
 ```
@@ -23,10 +23,15 @@ or directly download the zip file.
 
 Requirements
 
+- Python 3.11
+
+
+and packages
+
 ```
 tensorflow==2.16.1
 numpy<2
-sklearn==1.8
+scikit-learn==1.8
 matplotlib==3.10
 tqdm==4.67.3
 ```
@@ -36,28 +41,6 @@ After activating the virtual environment, you can install specific package requi
 pip install -r requirements.txt
 ```
 
-## Usage
-
-**Main algorithm**
-
-The main ASMC for polynomial Symbolic regression is available on the 
-
-```python
-run_ASMC.ipynb
-``` 
-
-notebook. It uses the 
-```python
-polynomial_sampler.py
-```
-where the main ASMC algorithm is implemented. 
-
-**Gradient Descent and local analysis**
-
-The gradient descent and local analysis can be found in the 
-```
-Gradient_descent_and_local_analysis.ipynb notebook. 
-```
 
 ## Citation
 ```python
@@ -73,5 +56,5 @@ Gradient_descent_and_local_analysis.ipynb notebook.
 ```
 
 ## Contact
-If you have any questions, please contact bastien.duboeuf@aei.mpg.de or camille.eloy@ens-lyon.fr 
+If you have any questions, please contact [Bastien Duboeuf](https://inspirehep.net/authors/1881378), [Camille Eloy](https://inspirehep.net/authors/1748427) or [Gabriel Larios](https://inspirehep.net/authors/1728355)
 
