@@ -49,7 +49,9 @@ class SparsePolynomialSampler:
                 prob_divide: Callable[[int, int], float] = lambda i,n_iter: 0.2,
                 prob_multiply: Callable[[int, int], float] = lambda i,n_iter: 0.2,
                 regularisation_factor: float = 1e3,
-                min_coeff_threshold: float = 0.1):
+                min_coeff_threshold: float = 0.1,
+                random_seed: int = 42
+                ):
         """
         Initialize the sparse polynomial sampler with data and parameters.
 
@@ -62,11 +64,11 @@ class SparsePolynomialSampler:
             prob_add (float): Probability of adding a monomial.
             prob_remove (float): Probability of removing a monomial.
             prob_modify (float): Probability of modifying a coefficient.
-            prob_multiply (float): Probability of multiplying a monomial by a variable.
             prob_divide (float): Probability of dividing a monomial by a variable.
+            prob_multiply (float): Probability of multiplying a monomial by a variable.
             regularisation_factor (float): Factor for regularizing the sum of coefficients.
             min_coeff_threshold (float): Coefficients below this are set to zero.
-            beta_schedule (Callable): Function defining temperature for each iteration.
+            random_seed (int): Random seed for np.random
         """
         self.data_x = data_x
         self.max_degree = max_degree
@@ -81,6 +83,8 @@ class SparsePolynomialSampler:
         self.prob_divide = prob_divide 
 
         self.regularisation_factor = regularisation_factor
+
+        self.random_seed = random_seed
 
         self.num_terms = self._compute_num_terms()
         self.term_powers = self._generate_term_powers()
@@ -147,6 +151,8 @@ class SparsePolynomialSampler:
         
         # S'assurer qu'aucun polynôme n'est entièrement nul
         zero_polynomials = np.all(np.abs(normalized) < 1e-10, axis=1)
+        
+        np.random.seed = self.random_seed
         if np.any(zero_polynomials):
             # Pour chaque polynôme nul, ajouter un coefficient aléatoire
             for i in np.where(zero_polynomials)[0]:
@@ -355,6 +361,7 @@ class SparsePolynomialSampler:
         n_mon_all_coeff = np.array(n_mon_all_coeff) 
         proba_ = n_mon_all_coeff/n_tot_pol
         
+        np.random.seed = self.random_seed
         for i in range(n_particles):
             # Choisir le nombre de monômes selon la distribution de poids
             # Le +1 garantit qu'il y ait au moins 1 monôme
@@ -455,6 +462,7 @@ class SparsePolynomialSampler:
         n_particles, n_terms = current_coeffs_batch.shape
         proposed_coeffs = current_coeffs_batch.copy()
         log_proposal_ratios = np.zeros(n_particles)
+        np.random.seed = self.random_seed
 
         # Calculer les probabilités d'opération
         prob_multiply = self.prob_multiply(i, n_iter)
@@ -574,6 +582,8 @@ class SparsePolynomialSampler:
     def local_search(self, coefficients, n_steps=100, use_reg=False):
         """Adjust the polynomial with a local search"""
         best_coeffs = coefficients.copy()
+        np.random.seed = self.random_seed
+
         if use_reg:
             best_loss = self.compute_loss_batch(best_coeffs.reshape(1, -1))[0]
         else:
@@ -616,6 +626,7 @@ class SparsePolynomialSampler:
                 - np.ndarray: Vector of improved losses (n_particles,).
         """
         coefficients_batch_ = coefficients_batch.copy()
+        np.random.seed = self.random_seed
 
         new_losses = []
 
@@ -662,29 +673,33 @@ class SparsePolynomialSampler:
         Returns:
             indices: resampled particle indices
         """
+        np.random.seed = self.random_seed
         return np.random.choice(len(weights), size=n_samples, p=weights, replace=True)
 
-    def run_annealing_is(self, n_iter: int, 
-                        n_particles: int, 
-                        n_iter_exploit: int = 0, 
-                        std_exploit: float = 0.01,
-                        sparsity_factor: float = 1.0,
-                        degree_bias: float = 0.5,
-                        verbose: bool = True,
-                        target_acc_rate: Callable[[int, int], float] = lambda x,y: 0.3,
-                        adaptation_strength: Callable[[int,int], float] = lambda x,y: 0.5,
-                        beta_schedule: Callable[[int, int], float] = lambda i,n_iter: 1e-10 + (i/n_iter)**2,
-                        adaptative_temp: bool = True,
-                        analysis: bool = False,
-                        target_terms: list = [],
-                        )-> Tuple[np.ndarray, float, np.ndarray, np.ndarray, list]:
+    def run_annealing_is(
+            self, 
+            n_iter: int, 
+            n_particles: int, 
+            n_iter_exploit: int = 0, 
+            std_exploit: float = 0.01,
+            sparsity_factor: float = 1.0,
+            degree_bias: float = 0.5,
+            verbose: bool = True,
+            target_acc_rate: Callable[[int, int], float] = lambda x,y: 0.3,
+            adaptation_strength: Callable[[int,int], float] = lambda x,y: 0.5,
+            beta_schedule: Callable[[int, int], float] = lambda i,n_iter: 1e-10 + (i/n_iter)**2,
+            adaptative_temp: bool = True,
+            analysis: bool = False,
+            target_terms: list = [],
+        )-> Tuple[np.ndarray, float, np.ndarray, np.ndarray, list]:
         """
         Run the vectorized Annealing Importance Sampling algorithm.
 
         Args:
             n_iter (int): Number of annealing iterations.
-            n_iter_exploit (int): Number of exploitation steps with p_mod = 1.
             n_particles (int): Number of particles.
+            n_iter_exploit (int): Number of exploitation steps with p_mod = 1.
+            std_exploit (float): Std to be used in the local search.
             sparsity_factor (float): Sparsity factor for the prior.
             verbose (bool): If True, print information during execution.
             analysis (bool): If True, retain additional data for analysis.
@@ -699,6 +714,7 @@ class SparsePolynomialSampler:
                 - History of the first 10 particles
         """
         start_time = time.time()
+        np.random.seed = self.random_seed
         
         # Initialiser les particules avec des polynômes parcimonieux
         particles = self.initialize_sparse_polynomials(n_particles)
