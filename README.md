@@ -1,9 +1,9 @@
-## Annealed Sequential Monte Carlo (ASMC) for polynomial symbolic regression
+## Annealed Sequential Monte Carlo sampler (ASMC) for polynomial symbolic regression
 
 This is the github repo for the paper ["Machine Learning the Conformal Manifold of Holographic CFT2s"](https://arxiv.org/abs/2511.02981).
 
 The repository contains a package `ASMC` where the method is implemented.
-This algorithm performs Annealed Sequential Monte Carlo to discover polynomial relations in data, such that $P(x_{\text{data}}) = 0$.
+This algorithm performs Annealed Sequential Monte Carlo sampling to discover polynomial relations in data, such that $P(x_{\text{data}}) = 0$.
 
 The package is supplemented by two jupyter notebooks:
 

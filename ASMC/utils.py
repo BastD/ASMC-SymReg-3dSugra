@@ -10,61 +10,53 @@ from tqdm import tqdm
 
 
 # Inspection of Conformal Manifold
-def triangular_plot(chains,save='None',xlim='None',ylim='None',figsize=(25,25),names=None):
+def triangular_plot(chains,save='None',figsize=(10,10),names=None):
     data=chains
     nsteps,ndim=chains.shape
     fig = plt.figure(figsize=figsize)
-    fig.set(facecolor = "white")
+    gs = fig.add_gridspec(nrows=ndim, ncols=ndim, hspace=0, wspace=0)
+    axs = gs.subplots()
+
     for i in range(ndim):
-        ax = fig.add_subplot(ndim,ndim,i*ndim+i+1)
-        ax.hist(data[:,i], 100, color="k", histtype="step")
-        if names == 'None':
-            ax.set_title(f"x{i+1}")
-        else: 
-            ax.set_title(str(names[i]))
-    for i in range(ndim):
-        for j in range(i):
-            plt.subplot(ndim,ndim,ndim*i+j+1)
-            counts,xbins,ybins,image = plt.hist2d(data[:,j],data[:,i],bins=100
-                                      ,norm=LogNorm()
-                                      ,cmap = plt.cm.rainbow)
-            plt.colorbar()
-            plt.contour(counts.transpose(),extent=[xbins[0],xbins[-1],ybins[0],ybins[-1]],
-            linewidths=0.5, cmap = plt.cm.rainbow, levels = [1,100,1000,10000])
-            if not ylim == "None": 
-                plt.ylim(ylim)
-            if not xlim == "None":
-                plt.xlim(xlim)
+        for j in range(ndim):
+            if i<j:
+                axs[i,j].axis('off')
+            elif i==j:
+                counts, bins, _ = axs[i,j].hist(data[:,i], 100, color="k", histtype="step")
+                # axs[i,j].yaxis.set_label_position("right")
+                axs[i,j].yaxis.tick_right()
+                axs[i,j].set_ylim(bottom=-0.06*max(counts))
+                if not (i==ndim-1):
+                    axs[i,j].sharex(axs[-1,j])
+                    plt.setp(axs[i,j].get_xticklabels(), visible=False)
+                else:
+                    axs[i,j].set_xlim(min(data[:,i]),max(data[:,i]))
+                    axs[i,j].set_xlabel(str(names[i]))
+            else:
+                counts,xbins,ybins,image = axs[i,j].hist2d(data[:,j],data[:,i],bins=100,norm=LogNorm(),cmap = plt.cm.rainbow)
+                axs[i,j].contour(counts.transpose(),extent=[xbins[0],xbins[-1],ybins[0],ybins[-1]],linewidths=0.5, cmap = plt.cm.rainbow, levels = [1,100,1000,10000])
+                if not (i == ndim-1) :
+                    axs[i,j].sharex(axs[-1,j])
+                    plt.setp(axs[i,j].get_xticklabels(), visible=False)
+                if not (j == 0) :
+                    axs[i,j].sharey(axs[i,0])
+                    plt.setp(axs[i,j].get_yticklabels(), visible=False)
+                    axs[i,j].tick_params(axis='y', which='both', left=False)
+                if i == ndim-1 :
+                    axs[i,j].set_xlabel(str(names[j]))
+                if j == 0 :
+                    axs[i,j].set_ylabel(str(names[i]))
+                axs[i,j].locator_params(axis='both', nbins=3)
+    
+    cax = axs[-1,0].inset_axes([-0.6, (ndim-1)/4, 0.1, (ndim-1)/2])
+    fig.colorbar(image, cax=cax)
+    cax.yaxis.tick_left()
+
     if save != 'None':
-        plt.savefig(save,transparent=False)
+        plt.savefig(save, bbox_inches="tight")
         plt.show()
     else: 
         plt.show()
-
-def triangular_plot_slopes(chains,save='None',xlim='None',ylim='None'):
-    data=chains
-    nsteps,ndim=chains.shape
-    fig = plt.figure(figsize=(20,20))
-    fig.set(facecolor = "white")
-    for i in range(ndim):
-        for j in range(i):
-            ax=fig.add_subplot(ndim,ndim,ndim*i+j+1)
-            #those_slope0=np.extract(np.abs(data[:,0])>0.2,data[:,i]/data[:,j])
-            those_slope0=data[:,i]/data[:,j]
-            those_slope=np.extract(np.abs(those_slope0)<10,those_slope0)
-            ax.hist(those_slope,bins=100)
-            ax.set_title(f"x{j+1}/x{i+1}")
-            if not ylim == "None": 
-                ax.ylim(ylim)
-            if not xlim == "None":
-                ax.xlim(xlim)
-            #ax.set_ylabel(f"x{i}")
-    if save != 'None':
-        plt.savefig(save,transparent=False)
-        plt.show()
-    else: 
-        plt.show()
-
 
 # Local Analysis
 def local_dim_1_point(x, var_thres=0.99):
